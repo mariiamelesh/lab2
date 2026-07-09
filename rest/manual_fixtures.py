@@ -19,23 +19,23 @@ def answer():
 
     valid_data = {
         'id': str(sample_uuid),
-        'author_id': '67676767-6767-6767-6767-676767676767',
-        'question_id': '66666666-7777-6666-7777-666666777777',
+        'author_id': '6666666677777777',
+        'question_id': '000000000',
         'body': 'meowmeowmoemow',
         'score': 67
     }
 
     data_without_id = {
-        'author_id': '22222222-2222-2222-2222-222222222222',
-        'question_id': '33333333-3333-3333-3333-333333333333',
-        'body': 'No id provided',
+        'author_id': '68686868',
+        'question_id': '1010101010',
+        'body': 'theres no id here XD',
         'score': 0
     }
 
     expected_answer = Answer(
         id=sample_uuid,
-        author_id=uuid.UUID('67676767-6767-6767-6767-676767676767'),
-        question_id=uuid.UUID('66666666-7777-6666-7777-666666777777'),
+        author_id=uuid.UUID('67676767-6767-6767-6767-676767676760'),
+        question_id=uuid.UUID('67676767-6767-6767-6767-676767676760'),
         score=67,
         body='meowmeowmoemow'
     )
@@ -55,20 +55,19 @@ class TestAnswerCreation:
         result = answer['mapper'].map_request(
             answer['valid_data']
         )
-        assert result.id == answer_creation_data['valid_data']['id']
+        assert result.id == answer['valid_data']['id']
         assert result.author_id == answer['valid_data']['author_id']
         assert result.body == answer['valid_data']['body']
         assert result.score ==  answer['valid_data']['score']
 
     def test_map_request_generates_id_when_missing(self, answer):
-        result = answer_creation_data['mapper'].map_request(answer['data_without_id'])
+        result = answer['mapper'].map_request(answer['data_without_id'])
         assert isinstance(result.id, uuid.UUID)
 
     def test_create_returns_mapper_result(self, answer):
-        answer['mock_mapper'].map_request.return_value =
-            answer['expected_answer']
+        answer['mock_mapper'].map_request.return_value = answer['expected_answer']
 
-        result = answer_creation_data['service'].create_answer(answer['valid_data'])
+        result = answer['service'].create_answer(answer['valid_data'])
         assert result is answer['expected_answer']
 
 
@@ -77,16 +76,16 @@ def answer_search():
     service = AnswerService()
 
     filter_by_author = AnswerFilters(
-        author_id='67676767-6767-6767-6767-676767676767',
+        author_id='676767',
         question_id=None
     )
     filter_by_question = AnswerFilters(
         author_id=None,
-        question_id='66666666-7777-6666-7777-666666777777'
+        question_id='1010101'
     )
     filter_by_both = AnswerFilters(
-        author_id='67676767-6767-6767-6767-676767676767',
-        question_id='66666666-7777-6666-7777-666666777777'
+        author_id='000009999910000',
+        question_id='67'
     )
     filter_empty = AnswerFilters(author_id=None, question_id=None)
 
@@ -102,23 +101,23 @@ def answer_search():
 class TestAnswerSearch:
 
     def test_search_by_author_returns_page(self, answer_search):
-        result = answer_search_data['service'].get_answers(
-            answer_search_data['filter_by_author'], page=1, size=10
+        result = answer_search['service'].get_answers(
+            answer_search['filter_by_author'], page=1, size=10
         )
         assert isinstance(result, Page)
         assert len(result.content) > 0
 
     def test_search_by_question_returns_page(self, answer_search):
-        result = answer_search_data['service'].get_answers(
-            answer_search_data['filter_by_question'], page=1, size=10
+        result = answer_search['service'].get_answers(
+            answer_search['filter_by_question'], page=1, size=10
         )
         assert isinstance(result, Page)
 
     def test_search_with_both_filters(self, answer_search):
-        result = answer_search_data['service'].get_answers(answer_search_data['filter_by_both'], page=1, size=10)
+        result = answer_search['service'].get_answers(answer_search['filter_by_both'], page=1, size=10)
         assert isinstance(result, Page)
 
-    def test_search_pagination_metadata(self, answer_search_data):
+    def test_search_pagination_metadata(self, answer_search):
         result = answer_search['service'].get_answers(answer_search['filter_empty'], page=3, size=7)
         assert result.page == 3
         assert result.size == 7
@@ -135,16 +134,16 @@ def answer_edge_data():
     }
 
     data_negative_score = {
-        'author_id': '67676767-6767-6767-6767-676767676767',
-        'question_id': '33333333-3333-3333-3333-333333333333',
-        'body': 'Negative score',
+        'author_id': '6666667777777',
+        'question_id': '12345 6 7 89',
+        'body': 'miu miu 67',
         'score': -999
     }
 
     data_empty_id = {
         'id': '',
-        'author_id': '22222222-2222-2222-2222-222222222222',
-        'question_id': '33333333-3333-3333-3333-333333333333',
+        'author_id': '676767676',
+        'question_id': '1666777420',
         'body': 'Empty id',
         'score': 0
     }
