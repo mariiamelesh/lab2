@@ -26,7 +26,7 @@ class AnswerService:
     
     def get_answer(self, answer_id) -> Answer:
         #витягли з бази і замаппали в дто
-        return Answer(id=answer_id, author_id=1, body='body')
+        return Answer(id=answer_id, author_id=1, question_id=1, score=0, body='body')
     
     def get_answers(self, filters: AnswerFilters, page: int, size: int) -> Page[Answer]:
         answers = [self.get_answer(uuid.uuid4())]
