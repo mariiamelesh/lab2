@@ -8,7 +8,7 @@ from application.models import Page
 
 
 @pytest.fixture
-def client(self):
+def client():
     from application import app
     mock_service = MagicMock(spec=AnswerService)
     with app.test_client() as client:
@@ -17,7 +17,7 @@ def client(self):
                 yield client, mock_service
 
 @pytest.fixture
-def created_answer(self):
+def created_answer():
     return Answer(
         id=uuid.UUID('67676767-6767-6767-6767-676767676767'),
         author_id=uuid.UUID('67676767-6767-6767-6767-676767676767'),
@@ -88,7 +88,7 @@ class TestCreateAnswer:
         assert resp.status_code == 201
         
 @pytest.fixture
-def client(self):
+def client():
     from application import app
     mock_service = MagicMock(spec=AnswerService)
     with app.test_client() as client:
@@ -97,7 +97,7 @@ def client(self):
                 yield client, mock_service
 
 @pytest.fixture
-def sample_page(self):
+def sample_page():
     answer = Answer(
         id=uuid.UUID('67676767-6767-6767-6767-676767676767'),
         author_id=uuid.UUID('76767676-7676-7676-7676-767676767676'),

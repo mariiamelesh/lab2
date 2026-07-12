@@ -52,7 +52,7 @@ def security_data():
 
 
 @pytest.fixture
-def client(self):
+def client():
     from application import app
     mock_service = MagicMock(spec=AnswerService)
     with app.test_client() as client:
