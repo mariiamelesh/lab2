@@ -1,10 +1,3 @@
-"""
-Крок 2c — Тести, згенеровані за тестовою стратегією.
-Добиваємо покриття всієї папки answer.
-
-Фікстури ті самі 3: answer (створення), answer_search (пошук),
-answer_edge_data (граничні). Плюс додана фікстура для контролера.
-"""
 import uuid
 import pytest
 from unittest.mock import MagicMock, patch
@@ -13,11 +6,6 @@ from application.answer.answer_service import AnswerService, AnswerFilters
 from application.answer.model.dto.answer import Answer
 from application.answer.model.mapper.answer_mapper import AnswerMapper
 from application.models import Page
-
-
-# ═══════════════════════════════════════════════════════════════
-# Фікстура 1: Створення відповіді
-# ═══════════════════════════════════════════════════════════════
 
 @pytest.fixture
 def answer():
@@ -63,8 +51,6 @@ def answer():
 
 
 class TestAnswerCreation:
-    """Тести створення відповіді — mapper + service."""
-
     def test_map_request_all_fields(self, answer):
         result = answer['mapper'].map_request(answer['valid_data'])
         assert result.id == answer['valid_data']['id']
@@ -87,19 +73,16 @@ class TestAnswerCreation:
         answer['mock_mapper'].map_request.assert_called_once_with(answer['valid_data'])
 
     def test_update_delegates_to_mapper(self, answer):
-        """update_answer теж делегує mapper-у."""
         answer['mock_mapper'].map_request.return_value = answer['expected_answer']
         answer['service'].update_answer(uuid.uuid4(), answer['valid_data'])
         answer['mock_mapper'].map_request.assert_called_once_with(answer['valid_data'])
 
     def test_update_returns_mapper_result(self, answer):
-        """update_answer повертає результат mapper-у."""
         answer['mock_mapper'].map_request.return_value = answer['expected_answer']
         result = answer['service'].update_answer(uuid.uuid4(), answer['valid_data'])
         assert result is answer['expected_answer']
 
     def test_map_entity_to_dto_preserves_fields(self, answer):
-        """map_entity_to_dto переносить усі поля з entity у новий DTO."""
         entity = Answer(
             id=uuid.uuid4(),
             author_id=uuid.uuid4(),
@@ -115,7 +98,6 @@ class TestAnswerCreation:
         assert result.body == 'Entity body'
 
     def test_map_entity_to_dto_returns_new_object(self, answer):
-        """map_entity_to_dto повертає новий об'єкт, не посилання на той самий."""
         entity = Answer(
             id=uuid.uuid4(),
             author_id=uuid.uuid4(),
@@ -125,12 +107,7 @@ class TestAnswerCreation:
         )
         result = answer['mapper'].map_entity_to_dto(entity)
         assert result is not entity
-
-
-# ═══════════════════════════════════════════════════════════════
-# Фікстура 2: Пошук відповідей
-# ═══════════════════════════════════════════════════════════════
-
+        
 @pytest.fixture
 def answer_search():
     service = AnswerService()
@@ -147,11 +124,7 @@ def answer_search():
         'filter_by_both': filter_by_both,
         'filter_empty': filter_empty,
     }
-
-
 class TestAnswerSearch:
-    """Тести пошуку відповідей — фільтри + пагінація."""
-
     def test_search_by_author_returns_page(self, answer_search):
         result = answer_search['service'].get_answers(
             answer_search['filter_by_author'], page=1, size=10
@@ -179,13 +152,11 @@ class TestAnswerSearch:
         assert result.size == 7
 
     def test_get_answer_returns_correct_id(self, answer_search):
-        """get_answer повертає Answer з тим id який попросили."""
         answer_id = uuid.uuid4()
         result = answer_search['service'].get_answer(answer_id)
         assert result.id == answer_id
 
     def test_get_answers_returns_page_with_content(self, answer_search):
-        """get_answers повертає Page хоча б з одним Answer у content."""
         result = answer_search['service'].get_answers(
             answer_search['filter_empty'], page=1, size=10
         )
@@ -193,7 +164,6 @@ class TestAnswerSearch:
         assert isinstance(result.content[0], Answer)
 
     def test_page_to_json_has_required_fields(self, answer_search):
-        """Page.to_json() містить size, page, total_pages, content."""
         result = answer_search['service'].get_answers(
             answer_search['filter_empty'], page=1, size=10
         )
@@ -204,18 +174,11 @@ class TestAnswerSearch:
         assert 'content' in json_data
 
     def test_page_print_content_does_not_crash(self, answer_search):
-        """Page.print_content() не падає."""
         result = answer_search['service'].get_answers(
             answer_search['filter_empty'], page=1, size=10
         )
-        # просто перевіряємо що не вилітає
         result.print_content()
-
-
-# ═══════════════════════════════════════════════════════════════
-# Фікстура 3: Граничні дані
-# ═══════════════════════════════════════════════════════════════
-
+        
 @pytest.fixture
 def answer_edge_data():
     mapper = AnswerMapper()
@@ -251,8 +214,6 @@ def answer_edge_data():
 
 
 class TestAnswerEdgeCases:
-    """Тести граничних та помилкових сценаріїв."""
-
     def test_none_fields_preserved_as_none(self, answer_edge_data):
         result = answer_edge_data['mapper'].map_request(answer_edge_data['data_all_none'])
         assert result.author_id is None
@@ -270,7 +231,7 @@ class TestAnswerEdgeCases:
 
 
 # ═══════════════════════════════════════════════════════════════
-# Фікстура 4: Контролер
+# Нова фікстура: Контролер
 # ═══════════════════════════════════════════════════════════════
 
 @pytest.fixture
