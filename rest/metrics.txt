@@ -1,0 +1,28 @@
+=============================== tests coverage ================================
+_______________ coverage: platform win32, python 3.13.5-final-0 _______________
+
+Name                                                        Stmts   Miss Branch BrPart  Cover
+---------------------------------------------------------------------------------------------
+rest\application\__init__.py                                    8      0      0      0   100%
+rest\application\answer\__init__.py                             0      0      0      0   100%
+rest\application\answer\answer_controller.py                   31      0      4      0   100%
+rest\application\answer\answer_service.py                      22      0      0      0   100%
+rest\application\answer\model\__init__.py                       0      0      0      0   100%
+rest\application\answer\model\dto\__init__.py                   0      0      0      0   100%
+rest\application\answer\model\dto\answer.py                     9      0      0      0   100%
+rest\application\answer\model\mapper\__init__.py                0      0      0      0   100%
+rest\application\answer\model\mapper\answer_mapper.py           8      0      0      0   100%
+rest\application\models.py                                     13      0      0      0   100%
+rest\application\question\__init__.py                           0      0      0      0   100%
+rest\application\question\model\__init__.py                     0      0      0      0   100%
+rest\application\question\model\dto\__init__.py                 0      0      0      0   100%
+rest\application\question\model\dto\question.py                 8      0      0      0   100%
+rest\application\question\model\mapper\__init__.py              0      0      0      0   100%
+rest\application\question\model\mapper\question_mapper.py       8      3      0      0    62%
+rest\application\question\questions_controller.py              30     18      4      0    35%
+rest\application\question\questions_service.py                 21      8      0      0    62%
+rest\test_contract.py                                         105      6      4      0    93%
+rest\test_integration_tests.py                                 51      0      2      0   100%
+rest\test_manual_and_ai_coverage.py                           158      0      2      0   100%
+---------------------------------------------------------------------------------------------
+TOTAL                                                         472     35     16      0    92%
